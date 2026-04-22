@@ -1,64 +1,110 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect } from 'react';
+import { FileTree } from './components';
+import { useFileStore } from './fileStore';
+import { FileNode } from './fs';
+
+// Sample data to demonstrate the file tree
+const sampleFiles: FileNode[] = [
+  {
+    id: '1',
+    name: 'src',
+    type: 'folder',
+    parentId: null,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '2',
+    name: 'components',
+    type: 'folder',
+    parentId: '1',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '3',
+    name: 'Button.tsx',
+    type: 'file',
+    parentId: '2',
+    content: 'export function Button() { return <button>Click</button>; }',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '4',
+    name: 'Header.tsx',
+    type: 'file',
+    parentId: '2',
+    content: 'export function Header() { return <header>Header</header>; }',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '5',
+    name: 'utils',
+    type: 'folder',
+    parentId: '1',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '6',
+    name: 'helpers.ts',
+    type: 'file',
+    parentId: '5',
+    content: 'export const formatDate = (d: Date) => d.toISOString();',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: '7',
+    name: 'README.md',
+    type: 'file',
+    parentId: null,
+    content: '# Project README',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+];
 
 export default function Home() {
+  const { files, activeFileId, setFiles } = useFileStore();
+
+  // Load sample files on mount
+  useEffect(() => {
+    setFiles(sampleFiles);
+  }, [setFiles]);
+
+  // Get active file content for display
+  const activeFile = files.find((f) => f.id === activeFileId);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="flex h-screen bg-white">
+      {/* File Tree Sidebar */}
+      <FileTree />
+
+      {/* Main Content Area */}
+      <main className="flex-1 p-6">
+        {activeFile ? (
+          <div>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              {activeFile.name}
+            </h2>
+            {activeFile.content ? (
+              <pre className="bg-gray-50 p-4 rounded border border-gray-200 text-sm font-mono text-gray-700 overflow-auto">
+                {activeFile.content}
+              </pre>
+            ) : (
+              <p className="text-gray-500 italic">No content</p>
+            )}
+          </div>
+        ) : (
+          <div className="text-gray-500">
+            Select a file from the sidebar to view its contents
+          </div>
+        )}
       </main>
     </div>
   );
