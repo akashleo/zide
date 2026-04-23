@@ -46,11 +46,13 @@ export const dbService = {
 
   async deleteFilesByParent(parentId: string | null): Promise<void> {
     if (parentId === null) {
-      // Logic for deleting root level nodes if needed, 
-      // but usually we filter by a specific parentId.
       await db.files.where('parentId').equals('null').delete();
     } else {
       await db.files.where('parentId').equals(parentId).delete();
     }
+  },
+
+  async clearAllFiles(): Promise<void> {
+    await db.files.clear();
   }
 };

@@ -11,6 +11,7 @@ export type FileNode = {
   content?: string;
   createdAt: number;
   updatedAt: number;
+  isDirty?: boolean;
 };
 
 export type TreeNode = FileNode & {
