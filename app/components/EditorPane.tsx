@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 import Editor from '@monaco-editor/react';
 import { useFileStore } from '../fileStore';
 import { useDebouncedSave } from '../hooks/useDebouncedSave';
@@ -44,7 +44,6 @@ export function EditorPane() {
   const activeTabId = useFileStore((state) => state.activeTabId);
   const files = useFileStore((state) => state.files);
   const updateFileContent = useFileStore((state) => state.updateFileContent);
-  const saveActiveFile = useFileStore((state) => state.saveActiveFile);
 
   const { save } = useDebouncedSave(500);
 
@@ -79,22 +78,6 @@ export function EditorPane() {
     },
     [activeFile, updateFileContent, save]
   );
-
-  /**
-   * Keyboard shortcuts for the editor
-   */
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl+S to save
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        saveActiveFile();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [saveActiveFile]);
 
   // Case 1: No file selected
   if (!activeTabId) {

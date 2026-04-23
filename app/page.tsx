@@ -5,7 +5,6 @@ import { FileTree, EditorPane, TabsBar } from './components';
 import { useFileStore } from './fileStore';
 import { dbService } from './db';
 import { loadFolder } from './loadFolder';
-import { syncToDisk, SyncResult } from './syncService';
 
 function FolderIcon({ className }: { className?: string }) {
   return (
@@ -28,9 +27,6 @@ export default function Home() {
   const { files, activeTabId, openTabs, setFiles, closeTab, setActiveTab } = useFileStore();
   const [isLoading, setIsLoading] = useState(true);
   const [isPicking, setIsPicking] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<string | null>(null);
-  const [rootHandle, setRootHandle] = useState<FileSystemDirectoryHandle | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Check IndexedDB on mount; restore workspace if present
@@ -91,7 +87,7 @@ export default function Home() {
     setError(null);
     setIsPicking(true);
     try {
-      const { nodes, rootHandle: newRootHandle } = await loadFolder();
+      const nodes = await loadFolder();
       if (nodes.length === 0) {
         setIsPicking(false);
         return;
@@ -99,7 +95,6 @@ export default function Home() {
       await dbService.clearAllFiles();
       await dbService.bulkInsertFiles(nodes);
       setFiles(nodes);
-      setRootHandle(newRootHandle);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to open folder';
       setError(message);
@@ -112,58 +107,11 @@ export default function Home() {
     try {
       await dbService.clearAllFiles();
       setFiles([]);
-      setRootHandle(null);
-      setSyncStatus(null);
     } catch (err) {
       console.error('Failed to close workspace:', err);
     }
   }, [setFiles]);
 
-  const handleSyncToDisk = useCallback(async () => {
-    let currentRootHandle = rootHandle;
-
-    // If rootHandle is missing in state (e.g. after refresh), try to recover it from the files list
-    if (!currentRootHandle) {
-      const rootNode = files.find((f) => f.parentId === null && f.type === 'folder');
-      if (rootNode?.handle && rootNode.handle.kind === 'directory') {
-        currentRootHandle = rootNode.handle as FileSystemDirectoryHandle;
-        setRootHandle(currentRootHandle);
-      }
-    }
-
-    if (!currentRootHandle) {
-      setSyncStatus('No folder opened');
-      return;
-    }
-
-    setIsSyncing(true);
-    setSyncStatus('Syncing...');
-
-    try {
-      const result: SyncResult = await syncToDisk(currentRootHandle, files, {
-        onProgress: (status) => {
-          setSyncStatus(status.message);
-        },
-      });
-
-      if (result.success) {
-        const summary = `Saved: ${result.created.length} created, ${result.updated.length} updated, ${result.deleted.length} deleted`;
-        setSyncStatus(summary);
-        // Clear status after 3 seconds
-        setTimeout(() => setSyncStatus(null), 3000);
-      } else {
-        const errorMsg = result.errors.length > 0
-          ? `Sync failed: ${result.errors[0].message}`
-          : 'Sync failed';
-        setSyncStatus(errorMsg);
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Sync failed';
-      setSyncStatus(`Error: ${message}`);
-    } finally {
-      setIsSyncing(false);
-    }
-  }, [rootHandle, files]);
 
   if (isLoading) {
     return (
@@ -206,31 +154,14 @@ export default function Home() {
       {/* Sidebar Section */}
       <aside className="w-64 flex-shrink-0 flex flex-col border-r border-[#2b2b2b] overflow-hidden bg-[#252526]">
         <div className="p-4 border-b border-[#2b2b2b] flex justify-between items-center bg-[#252526]">
-          <div className="flex items-center gap-2">
-            <h1 className="font-bold text-[#cccccc] tracking-tight">ZIDE</h1>
-            {syncStatus && (
-              <span className={`text-xs ${syncStatus.startsWith('Error') || syncStatus.includes('failed') ? 'text-red-400' : 'text-[#858585]'}`}>
-                • {syncStatus}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleSyncToDisk}
-              disabled={isSyncing}
-              className="text-xs text-[#858585] hover:text-[#cccccc] transition-colors disabled:opacity-50"
-              title="Save all changes to disk"
-            >
-              {isSyncing ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              onClick={handleCloseWorkspace}
-              className="text-xs text-[#858585] hover:text-[#cccccc] transition-colors"
-              title="Close workspace"
-            >
-              Close
-            </button>
-          </div>
+          <h1 className="font-bold text-[#cccccc] tracking-tight">ZIDE</h1>
+          <button
+            onClick={handleCloseWorkspace}
+            className="text-xs text-[#858585] hover:text-[#cccccc] transition-colors"
+            title="Close workspace"
+          >
+            Close
+          </button>
         </div>
         <div className="flex-1 overflow-y-auto">
           <FileTree />
