@@ -70,7 +70,7 @@ export function TreeNode({
     }
   };
 
-  const indentStyle = { paddingLeft: `${level * 12 + 12}px` };
+  const indentStyle = { paddingLeft: `${level * 14 + 14}px` };
 
   return (
     <div>
@@ -78,18 +78,20 @@ export function TreeNode({
         style={indentStyle}
         onContextMenu={handleContextMenu}
         className={`
-          flex items-center py-1 px-2 cursor-pointer select-none text-sm group
-          transition-colors duration-75
-          ${isActive ? 'bg-[#37373d] text-white' : 'hover:bg-[#2a2d2e] text-[#cccccc] hover:text-white'}
-          ${isRenaming ? 'bg-[#094771]' : ''}
+          flex items-center h-8 px-2 cursor-pointer select-none text-[14px] group
+          transition-colors duration-100 ease-in-out
+          ${isActive 
+            ? 'bg-[#1a1a24] text-[#f0f0f5] border-l-2 border-indigo-500' 
+            : 'hover:bg-[#1a1a24]/60 text-[#9a9ab0] hover:text-[#f0f0f5] border-l-2 border-transparent'}
+          ${isRenaming ? 'bg-[#1a1a24]' : ''}
         `}
         onClick={isFolder ? handleFolderClick : handleFileClick}
       >
-        <span className="mr-1.5 w-4 flex items-center justify-center text-[10px] opacity-70">
-          {isFolder ? (isExpanded ? '▼' : '▶') : ''}
+        <span className={`mr-1 w-4 flex items-center justify-center text-[10px] transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''} ${!isFolder && 'invisible'}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </span>
 
-        <Icon className={`mr-2 text-lg flex-shrink-0 ${iconColor}`} />
+        <Icon className={`mr-2 text-[16px] flex-shrink-0 ${iconColor} ${!isActive && 'opacity-80'}`} />
 
         {isRenaming ? (
           <RenameInput
@@ -99,8 +101,10 @@ export function TreeNode({
           />
         ) : (
           <>
-            <span className="truncate flex-1">{node.name}</span>
-            {node.isDirty && <span className="ml-1 text-[10px] text-blue-400 opacity-80">●</span>}
+            <span className={`truncate flex-1 ${isActive ? 'font-medium' : 'font-normal'}`}>{node.name}</span>
+            {node.isDirty && (
+              <span className="ml-1 h-2 w-2 rounded-full bg-blue-500/60" />
+            )}
           </>
         )}
       </div>

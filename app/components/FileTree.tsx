@@ -90,7 +90,7 @@ export function FileTree() {
 
   return (
     <div 
-      className="w-64 bg-[#1e1e1e] border-r border-[#2b2b2b] h-full overflow-y-auto flex flex-col"
+      className="w-full bg-[#0f0f14] h-full overflow-y-auto flex flex-col scrollbar-hide"
       onContextMenu={(e) => {
         // Right click on empty area should show root context menu
         if (e.target === e.currentTarget) {
@@ -99,10 +99,11 @@ export function FileTree() {
         }
       }}
     >
-      <div className="flex-1 py-2">
+      <div className="flex-1 py-1">
         {tree.length === 0 ? (
-          <div className="p-4 text-sm text-[#858585]">
-            No files yet. Right-click here to create one.
+          <div className="p-6 text-center">
+            <p className="text-[14px] text-[#6a6a80] italic">No files in workspace</p>
+            <p className="text-[12px] text-[#4a4a60] mt-1.5">Right-click to create a file</p>
           </div>
         ) : (
           tree.map((node) => (

@@ -52,7 +52,7 @@ export const RenameInput: React.FC<RenameInputProps> = ({
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       onBlur={() => onConfirm(value.trim())}
-      className={`bg-blue-900/20 outline-none border border-blue-500 px-1 py-0.5 w-full text-sm text-white ${className}`}
+      className={`bg-indigo-900/20 outline-none border border-indigo-500 px-1.5 py-1 w-full text-[14px] text-[#f0f0f5] rounded ${className}`}
       spellCheck={false}
     />
   );

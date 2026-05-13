@@ -64,7 +64,7 @@ export function TabsBar() {
   }
 
   return (
-    <div className="flex h-9 min-h-0 items-end overflow-x-auto border-b border-[#2b2b2b] bg-[#252526] scrollbar-hide">
+    <div className="flex h-12 items-center overflow-x-auto scrollbar-hide bg-[#0f0f14] px-1 gap-0.5">
       {openTabs.map((fileId) => {
         const file = files.find((f) => f.id === fileId);
         if (!file) return null;
@@ -77,35 +77,35 @@ export function TabsBar() {
             key={fileId}
             onMouseDown={(e) => handleTabClick(e, fileId)}
             className={`
-              group relative flex h-8 min-w-0 max-w-[160px] flex-shrink-0 items-center
-              border-r border-[#2b2b2b] px-3 text-xs transition-colors
+              group relative flex h-10 min-w-0 max-w-[200px] flex-shrink-0 items-center
+              px-3.5 text-[14px] transition-all duration-150 ease-in-out border-t-2 border-transparent rounded-t-md
               ${isActive
-                ? 'bg-[#1e1e1e] text-[#cccccc]'
-                : 'bg-[#2d2d2d] text-[#858585] hover:bg-[#2a2d2e] hover:text-[#cccccc]'
+                ? 'bg-[#1a1a24] text-[#f0f0f5] border-t-indigo-500'
+                : 'bg-[#0f0f14] text-[#6a6a80] hover:text-[#b0b0c8] hover:bg-[#1a1a24]/60'
               }
             `}
           >
-            <Icon className={`mr-2 text-sm flex-shrink-0 ${iconColor}`} />
-            <span className="truncate">{file.name}</span>
-            {file.isDirty && <span className="ml-1 text-[10px] text-blue-400">●</span>}
-            <span
-              onClick={(e) => handleCloseClick(e, fileId)}
-              className={`
-                ml-2 inline-flex h-4 w-4 flex-shrink-0 cursor-pointer items-center justify-center
-                rounded-sm transition-colors
-                ${isActive
-                  ? 'text-gray-400 hover:bg-gray-200 hover:text-gray-700'
-                  : 'text-gray-400 hover:bg-gray-200 hover:text-gray-700'
-                }
-              `}
-              title="Close tab"
-            >
-              <CloseIcon className="h-3 w-3" />
-            </span>
-            {/* Active tab top border indicator */}
-            {isActive && (
-              <span className="absolute top-0 left-0 right-0 h-[1px] bg-blue-500" />
+            <Icon className={`mr-2 text-sm flex-shrink-0 ${iconColor} ${!isActive && 'opacity-60'}`} />
+            <span className="truncate mr-2 font-medium">{file.name}</span>
+            {file.isDirty ? (
+              <span className="ml-auto flex h-2 w-2 rounded-full bg-blue-500/80 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+            ) : (
+              <span
+                onClick={(e) => handleCloseClick(e, fileId)}
+                className={`
+                  ml-auto opacity-0 group-hover:opacity-100 p-0.5 rounded-md
+                  hover:bg-[#2a2a3a] hover:text-[#f0f0f5] transition-all
+                  ${isActive ? 'text-[#9a9ab0]' : 'text-[#6a6a80]'}
+                `}
+                title="Close tab"
+              >
+                <CloseIcon className="h-3 w-3" />
+              </span>
             )}
+            {/* Bottom active indicator - optional, using top border for now */}
+            {/* {isActive && (
+              <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500" />
+            )} */}
           </button>
         );
       })}
