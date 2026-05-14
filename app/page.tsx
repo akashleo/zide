@@ -6,23 +6,6 @@ import { useFileStore } from './fileStore';
 import { dbService } from './db';
 import { loadFolder } from './loadFolder';
 
-function FolderIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
 export default function Home() {
   const { files, activeTabId, openTabs, setFiles, closeTab, setActiveTab } = useFileStore();
   const [isLoading, setIsLoading] = useState(true);
@@ -227,9 +210,6 @@ export default function Home() {
     return (
       <div className="flex h-screen items-center justify-center bg-[#0f0f14] px-4 font-sans select-none">
         <div className="max-w-md w-full text-center">
-          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-[2rem] bg-[#1a1a24] shadow-2xl border border-[#2a2a3a] transform hover:rotate-6 transition-transform duration-500">
-            <FolderIcon className="h-10 w-10 text-indigo-400" />
-          </div>
           <h1 className="text-3xl font-bold text-[#f0f0f5] mb-3 tracking-tight">ZIDE</h1>
           <p className="text-[#9a9ab0] mb-10 text-[16px] leading-relaxed">
             A minimalist code editor for the web.<br/>
@@ -275,7 +255,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleCloseWorkspace}
-              className="p-1.5 rounded-md text-[#6a6a80] hover:text-[#f0f0f5] hover:bg-[#1a1a24] transition-all"
+              className="p-1.5 rounded-full text-[#6a6a80] hover:text-[#f0f0f5] hover:bg-[#1a1a24] transition-all"
               title="Close workspace"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
