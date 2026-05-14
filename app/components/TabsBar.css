@@ -1,0 +1,119 @@
+.tabs-bar {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  overflow-x: auto;
+  background-color: #0f0f14;
+  padding: 0 4px;
+  gap: 2px;
+}
+
+/* Hide scrollbar but allow scrolling */
+.tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+.tabs-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tab-item {
+  position: relative;
+  display: flex;
+  height: 40px;
+  min-width: 0;
+  max-width: 200px;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 14px;
+  transition: all 150ms ease-in-out;
+  border-top: 2px solid transparent;
+  border-radius: 6px 6px 0 0;
+  background-color: #0f0f14;
+  color: #6a6a80;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-item:hover {
+  color: #b0b0c8;
+  background-color: rgba(26, 26, 36, 0.6);
+}
+
+.tab-item.active {
+  background-color: #1a1a24;
+  color: #f0f0f5;
+  border-top-color: #6366f1; /* indigo-500 */
+}
+
+.tab-icon {
+  margin-right: 8px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.tab-icon.inactive {
+  opacity: 0.6;
+}
+
+.tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.tab-dirty-dot {
+  margin-left: auto;
+  display: flex;
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+  background-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.tab-close-btn {
+  margin-left: auto;
+  opacity: 0;
+  padding: 2px;
+  border-radius: 6px;
+  transition: all 150ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6a6a80;
+}
+
+.tab-item:hover .tab-close-btn {
+  opacity: 1;
+}
+
+.tab-item.active .tab-close-btn {
+  color: #9a9ab0;
+}
+
+.tab-close-btn:hover {
+  background-color: #2a2a3a;
+  color: #f0f0f5;
+}
+
+.tab-close-icon {
+  height: 12px;
+  width: 12px;
+}
+
+/* Icon Colors */
+.icon-blue { color: #60a5fa; }
+.icon-orange-dark { color: #ea580c; }
+.icon-yellow-dark { color: #ca8a04; }
+.icon-orange { color: #f97316; }
+.icon-orange-light { color: #fb923c; }
+.icon-yellow { color: #eab308; }
+.icon-red { color: #f87171; }
+.icon-green { color: #16a34a; }
+.icon-blue-light { color: #93c5fd; }
+.icon-gray { color: #9ca3af; }
+.icon-purple { color: #c084fc; }

@@ -1,144 +1,180 @@
 import React from 'react';
 import { 
-  SiJavascript, 
-  SiTypescript, 
-  SiReact, 
-  SiMarkdown, 
-  SiJson,
+  VscFile, 
+  VscFolder, 
+  VscFolderOpened,
+  VscCode,
+  VscJson,
+  VscMarkdown,
+  VscSymbolFile,
+  VscDatabase,
+  VscArchive,
+  VscSettingsGear,
+  VscTerminal,
+  VscLock
+} from 'react-icons/vsc';
+import {
+  SiTypescript,
+  SiJavascript,
+  SiReact,
   SiHtml5,
   SiCss,
+  SiSass,
+  SiLess,
+  SiTailwindcss,
+  SiSvg,
+  SiDocker,
+  SiNpm,
+  SiYarn,
+  SiPnpm,
+  SiBun,
+  SiVite,
+  SiNextdotjs,
+  SiAstro,
+  SiPostcss,
+  SiEslint,
+  SiPrettier,
+  SiBabel,
+  SiGraphql,
+  SiPrisma,
   SiPython,
   SiOpenjdk,
+  SiKotlin,
+  SiGo,
+  SiRust,
+  SiC,
   SiCplusplus,
   SiSharp,
   SiPhp,
   SiRuby,
-  SiGo,
-  SiRust,
   SiSwift,
-  SiKotlin,
-  SiDart,
+  SiLua,
   SiYaml,
-  SiDocker,
-  SiGit,
-  SiPostcss,
-  SiSass,
-  SiLess,
-  SiPowers,
-  SiGnubash
+  SiJson,
+  SiMarkdown
 } from 'react-icons/si';
-import { 
-  FaFileAlt, 
-  FaFileImage, 
-  FaFileArchive, 
-  FaFolder, 
-  FaFolderOpen,
-  FaFileCode,
-  FaFilePdf,
-  FaFileCsv,
-  FaFileAudio,
-  FaFileVideo
-} from 'react-icons/fa';
-import { VscSettingsGear } from 'react-icons/vsc';
 
 /**
  * Returns an appropriate icon and color based on file extension.
+ * Using Vsc and Si icons for a consistent VS Code / Cursor aesthetic.
  */
 export const getFileIcon = (fileName: string) => {
+  const lowerFileName = fileName.toLowerCase();
   const ext = fileName.split('.').pop()?.toLowerCase();
 
   // Special full filenames
-  if (fileName.toLowerCase() === 'dockerfile') return { icon: SiDocker, color: 'text-blue-400' };
-  if (fileName.toLowerCase() === '.gitignore') return { icon: SiGit, color: 'text-orange-600' };
-  if (fileName.toLowerCase() === '.env') return { icon: VscSettingsGear, color: 'text-yellow-600' };
+  if (lowerFileName === 'dockerfile') return { icon: SiDocker, color: 'icon-blue' };
+  if (lowerFileName === 'docker-compose.yml' || lowerFileName === 'docker-compose.yaml') return { icon: SiDocker, color: 'icon-blue-light' };
+  if (lowerFileName === '.gitignore') return { icon: VscSettingsGear, color: 'icon-orange-dark' };
+  if (lowerFileName === '.dockerignore') return { icon: SiDocker, color: 'icon-gray' };
+  if (lowerFileName === '.env' || lowerFileName.startsWith('.env.')) return { icon: VscSettingsGear, color: 'icon-yellow-dark' };
+  if (lowerFileName === 'package.json') return { icon: SiNpm, color: 'icon-red' };
+  if (lowerFileName === 'package-lock.json') return { icon: SiNpm, color: 'icon-orange-dark' };
+  if (lowerFileName === 'yarn.lock') return { icon: SiYarn, color: 'icon-blue' };
+  if (lowerFileName === 'pnpm-lock.yaml') return { icon: SiPnpm, color: 'icon-orange' };
+  if (lowerFileName === 'bun.lockb') return { icon: SiBun, color: 'icon-yellow' };
+  if (lowerFileName === 'tsconfig.json' || lowerFileName.startsWith('tsconfig.')) return { icon: SiTypescript, color: 'icon-blue' };
+  if (lowerFileName === 'vite.config.ts' || lowerFileName === 'vite.config.js') return { icon: SiVite, color: 'icon-purple' };
+  if (lowerFileName === 'next.config.js' || lowerFileName === 'next.config.ts' || lowerFileName === 'next.config.mjs') return { icon: SiNextdotjs, color: 'icon-gray' };
+  if (lowerFileName === 'nuxt.config.ts' || lowerFileName === 'nuxt.config.js') return { icon: VscCode, color: 'icon-green' };
+  if (lowerFileName === 'astro.config.mjs' || lowerFileName === 'astro.config.ts') return { icon: SiAstro, color: 'icon-orange' };
+  if (lowerFileName === 'tailwind.config.js' || lowerFileName === 'tailwind.config.ts' || lowerFileName === 'tailwind.config.cjs') return { icon: SiTailwindcss, color: 'icon-blue-light' };
+  if (lowerFileName === 'postcss.config.js' || lowerFileName === 'postcss.config.cjs') return { icon: SiPostcss, color: 'icon-orange-dark' };
+  if (lowerFileName === 'eslint.config.js' || lowerFileName === 'eslint.config.mjs' || lowerFileName.startsWith('.eslintrc')) return { icon: SiEslint, color: 'icon-purple' };
+  if (lowerFileName === '.prettierrc' || lowerFileName.startsWith('.prettierrc.')) return { icon: SiPrettier, color: 'icon-purple-light' };
+  if (lowerFileName === 'babel.config.js' || lowerFileName === 'babel.config.json' || lowerFileName === '.babelrc') return { icon: SiBabel, color: 'icon-yellow' };
+  if (lowerFileName === 'readme.md') return { icon: VscMarkdown, color: 'icon-blue' };
+  if (lowerFileName === 'license') return { icon: VscFile, color: 'icon-gray' };
 
   switch (ext) {
-    // Web
+    // Web & Styles
     case 'html':
     case 'htm':
-      return { icon: SiHtml5, color: 'text-orange-500' };
+      return { icon: SiHtml5, color: 'icon-orange' };
     case 'css':
-      return { icon: SiCss, color: 'text-blue-500' };
+      return { icon: SiCss, color: 'icon-blue' };
     case 'scss':
     case 'sass':
-      return { icon: SiSass, color: 'text-pink-400' };
+      return { icon: SiSass, color: 'icon-pink' };
     case 'less':
-      return { icon: SiLess, color: 'text-blue-600' };
-    case 'postcss':
-      return { icon: SiPostcss, color: 'text-red-400' };
-
+      return { icon: SiLess, color: 'icon-blue-dark' };
+    case 'tailwind':
+      return { icon: SiTailwindcss, color: 'icon-blue-light' };
+    
     // JavaScript / TypeScript / React
     case 'js':
     case 'mjs':
     case 'cjs':
-      return { icon: SiJavascript, color: 'text-yellow-400' };
+      return { icon: SiJavascript, color: 'icon-yellow' };
     case 'ts':
     case 'mts':
-      return { icon: SiTypescript, color: 'text-blue-500' };
+      return { icon: SiTypescript, color: 'icon-blue' };
     case 'jsx':
+      return { icon: SiReact, color: 'icon-blue-light' };
     case 'tsx':
-      return { icon: SiReact, color: 'text-blue-400' };
-
-    // Programming Languages
-    case 'py':
-    case 'pyc':
-    case 'pyd':
-      return { icon: SiPython, color: 'text-blue-400' };
-    case 'java':
-    case 'jar':
-      return { icon: SiOpenjdk, color: 'text-red-500' };
-    case 'cpp':
-    case 'cc':
-    case 'cxx':
-    case 'h':
-    case 'hpp':
-      return { icon: SiCplusplus, color: 'text-blue-600' };
-    case 'cs':
-      return { icon: SiSharp, color: 'text-purple-600' };
-    case 'php':
-      return { icon: SiPhp, color: 'text-indigo-400' };
-    case 'rb':
-      return { icon: SiRuby, color: 'text-red-600' };
-    case 'go':
-      return { icon: SiGo, color: 'text-blue-300' };
-    case 'rs':
-      return { icon: SiRust, color: 'text-orange-700' };
-    case 'swift':
-      return { icon: SiSwift, color: 'text-orange-500' };
-    case 'kt':
-    case 'kts':
-      return { icon: SiKotlin, color: 'text-purple-500' };
-    case 'dart':
-      return { icon: SiDart, color: 'text-blue-400' };
-
-    // Shell / Scripts
-    case 'sh':
-    case 'bash':
-    case 'zsh':
-      return { icon: SiGnubash, color: 'text-gray-300' };
-    case 'ps1':
-      return { icon: SiPowers, color: 'text-blue-400' };
+      return { icon: SiReact, color: 'icon-blue' };
 
     // Data / Config
     case 'json':
-      return { icon: SiJson, color: 'text-yellow-500' };
+      return { icon: VscJson, color: 'icon-yellow' };
     case 'yaml':
     case 'yml':
-      return { icon: SiYaml, color: 'text-red-400' };
+      return { icon: SiYaml, color: 'icon-red' };
+    case 'toml':
+    case 'ini':
+      return { icon: VscSettingsGear, color: 'icon-gray' };
     case 'xml':
-      return { icon: FaFileCode, color: 'text-orange-400' };
+      return { icon: VscCode, color: 'icon-orange-light' };
     case 'csv':
-      return { icon: FaFileCsv, color: 'text-green-600' };
+      return { icon: VscDatabase, color: 'icon-green' };
+    case 'sql':
+      return { icon: VscDatabase, color: 'icon-blue' };
+    case 'graphql':
+    case 'gql':
+      return { icon: SiGraphql, color: 'icon-pink' };
+    case 'prisma':
+      return { icon: SiPrisma, color: 'icon-blue' };
 
     // Documentation / Text
     case 'md':
     case 'mdx':
-      return { icon: SiMarkdown, color: 'text-blue-300' };
+      return { icon: VscMarkdown, color: 'icon-blue-light' };
     case 'txt':
     case 'log':
-      return { icon: FaFileAlt, color: 'text-gray-400' };
-    case 'pdf':
-      return { icon: FaFilePdf, color: 'text-red-500' };
+      return { icon: VscFile, color: 'icon-gray' };
+
+    // Languages
+    case 'py':
+      return { icon: SiPython, color: 'icon-blue' };
+    case 'java':
+      return { icon: SiOpenjdk, color: 'icon-red' };
+    case 'kt':
+      return { icon: SiKotlin, color: 'icon-orange' };
+    case 'go':
+      return { icon: SiGo, color: 'icon-blue-light' };
+    case 'rs':
+      return { icon: SiRust, color: 'icon-orange-dark' };
+    case 'c':
+      return { icon: SiC, color: 'icon-blue' };
+    case 'cpp':
+      return { icon: SiCplusplus, color: 'icon-blue' };
+    case 'cs':
+      return { icon: SiSharp, color: 'icon-purple' };
+    case 'php':
+      return { icon: SiPhp, color: 'icon-purple' };
+    case 'rb':
+      return { icon: SiRuby, color: 'icon-red' };
+    case 'swift':
+      return { icon: SiSwift, color: 'icon-orange' };
+    case 'lua':
+      return { icon: SiLua, color: 'icon-blue' };
+    
+    // Shell
+    case 'sh':
+    case 'zsh':
+    case 'fish':
+    case 'bash':
+      return { icon: VscTerminal, color: 'icon-gray' };
 
     // Media
     case 'png':
@@ -148,26 +184,21 @@ export const getFileIcon = (fileName: string) => {
     case 'svg':
     case 'webp':
     case 'ico':
-      return { icon: FaFileImage, color: 'text-purple-400' };
-    case 'mp3':
-    case 'wav':
-    case 'flac':
-      return { icon: FaFileAudio, color: 'text-pink-400' };
-    case 'mp4':
-    case 'mov':
-    case 'avi':
-      return { icon: FaFileVideo, color: 'text-purple-500' };
+      if (ext === 'svg') return { icon: SiSvg, color: 'icon-orange' };
+      return { icon: VscSymbolFile, color: 'icon-purple' };
 
-    // Archives
+    // Locks & Archives
+    case 'lock':
+      return { icon: VscLock, color: 'icon-gray' };
     case 'zip':
     case 'rar':
     case '7z':
     case 'tar':
     case 'gz':
-      return { icon: FaFileArchive, color: 'text-gray-400' };
+      return { icon: VscArchive, color: 'icon-gray' };
 
     default:
-      return { icon: FaFileAlt, color: 'text-gray-400' };
+      return { icon: VscFile, color: 'icon-gray' };
   }
 };
 
@@ -176,7 +207,7 @@ export const getFileIcon = (fileName: string) => {
  */
 export const getFolderIcon = (isExpanded: boolean) => {
   return {
-    icon: isExpanded ? FaFolderOpen : FaFolder,
-    color: 'text-yellow-500'
+    icon: isExpanded ? VscFolderOpened : VscFolder,
+    color: 'icon-yellow'
   };
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import './RenameInput.css';
 
 interface RenameInputProps {
   initialValue: string;
@@ -52,7 +53,7 @@ export const RenameInput: React.FC<RenameInputProps> = ({
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       onBlur={() => onConfirm(value.trim())}
-      className={`bg-indigo-900/20 outline-none border border-indigo-500 px-1.5 py-1 w-full text-[14px] text-[#f0f0f5] rounded ${className}`}
+      className={`rename-input ${className}`}
       spellCheck={false}
     />
   );

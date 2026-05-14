@@ -1,10 +1,13 @@
 'use client';
 
 import React, { useMemo, useState, useCallback } from 'react';
+import './FileTree.css';
 import { useFileStore } from '../fileStore';
 import { buildTree, FileNode, TreeNode as TreeNodeType } from '../fs';
 import { TreeNode } from './TreeNode';
 import { ContextMenu, ContextMenuItem } from './ContextMenu';
+
+import { VscNewFile, VscNewFolder, VscSearch, VscCollapseAll } from 'react-icons/vsc';
 
 /**
  * FileTree - Main sidebar component for the file explorer.
@@ -89,21 +92,46 @@ export function FileTree() {
   }, [contextMenu, files, createNode, duplicateNode, deleteNode]);
 
   return (
-    <div 
-      className="w-full bg-[#0f0f14] h-full overflow-y-auto flex flex-col scrollbar-hide"
-      onContextMenu={(e) => {
-        // Right click on empty area should show root context menu
-        if (e.target === e.currentTarget) {
-          e.preventDefault();
-          setContextMenu({ x: e.clientX, y: e.clientY, nodeId: 'root' });
-        }
-      }}
-    >
-      <div className="flex-1 py-1">
+    <aside className="sidebar">
+      <div className="sidebar-header">
+        <span className="sidebar-title">Files</span>
+        <div className="sidebar-actions">
+          <button 
+            className="sidebar-action-btn" 
+            title="New File"
+            onClick={() => createNode({ name: 'new_file.txt', type: 'file', parentId: null })}
+          >
+            <VscNewFile size={16} />
+          </button>
+          <button 
+            className="sidebar-action-btn" 
+            title="New Folder"
+            onClick={() => createNode({ name: 'new_folder', type: 'folder', parentId: null })}
+          >
+            <VscNewFolder size={16} />
+          </button>
+          <button className="sidebar-action-btn" title="Search">
+            <VscSearch size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div 
+        className="file-tree"
+        role="tree"
+        aria-label="File Explorer"
+        onContextMenu={(e) => {
+          // Right click on empty area should show root context menu
+          if (e.target === e.currentTarget) {
+            e.preventDefault();
+            setContextMenu({ x: e.clientX, y: e.clientY, nodeId: 'root' });
+          }
+        }}
+      >
         {tree.length === 0 ? (
-          <div className="p-6 text-center">
-            <p className="text-[14px] text-[#6a6a80] italic">No files in workspace</p>
-            <p className="text-[12px] text-[#4a4a60] mt-1.5">Right-click to create a file</p>
+          <div className="file-tree-empty">
+            <p className="file-tree-empty-text">No files in workspace</p>
+            <p className="file-tree-empty-hint">Right-click to create a file</p>
           </div>
         ) : (
           tree.map((node) => (
@@ -139,6 +167,6 @@ export function FileTree() {
           onClose={() => setContextMenu(null)}
         />
       )}
-    </div>
+    </aside>
   );
 }

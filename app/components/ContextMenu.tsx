@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import './ContextMenu.css';
 
 export interface ContextMenuItem {
   label: string;
@@ -54,7 +55,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, items, onClose }
     <div
       ref={menuRef}
       style={style}
-      className="bg-[#1a1a24] border border-[#2a2a3a] shadow-xl shadow-black/40 rounded-lg py-1.5 min-w-[170px] animate-in fade-in zoom-in duration-75"
+      className="context-menu"
     >
       {items.map((item, index) => (
         <button
@@ -64,13 +65,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, items, onClose }
             item.onClick();
             onClose();
           }}
-          className={`w-full text-left px-3.5 py-2 text-[14px] flex items-center gap-2 transition-colors
-            ${item.danger 
-              ? 'text-red-400 hover:bg-red-500/10' 
-              : 'text-[#b0b0c8] hover:bg-indigo-500/10 hover:text-[#f0f0f5]'
-            }`}
+          className={`context-menu-item ${item.danger ? 'danger' : ''}`}
         >
-          {item.icon && <span className="opacity-70">{item.icon}</span>}
+          {item.icon && <span className="context-menu-item-icon">{item.icon}</span>}
           <span>{item.label}</span>
         </button>
       ))}

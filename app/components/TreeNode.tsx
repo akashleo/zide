@@ -5,6 +5,7 @@ import { TreeNode as TreeNodeType } from '../fs';
 import { RenameInput } from './RenameInput';
 import { useFileStore } from '../fileStore';
 import { getFileIcon, getFolderIcon } from './fileIcons';
+import { VscChevronRight } from 'react-icons/vsc';
 
 interface TreeNodeProps {
   node: TreeNodeType;
@@ -41,7 +42,6 @@ export function TreeNode({
   const isFolder = node.type === 'folder';
   const isActive = node.id === activeTabId;
   const isRenaming = renamingNodeId === node.id;
-  const hasChildren = isFolder && node.children.length > 0;
 
   // Compute icon based on type and state
   const { icon: Icon, color: iconColor } = useMemo(() => {
@@ -49,7 +49,8 @@ export function TreeNode({
     return getFileIcon(node.name);
   }, [isFolder, isExpanded, node.name]);
 
-  const handleFolderClick = useCallback(() => {
+  const handleFolderClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     if (isFolder) {
       setIsExpanded((prev) => !prev);
     }
@@ -70,28 +71,29 @@ export function TreeNode({
     }
   };
 
-  const indentStyle = { paddingLeft: `${level * 14 + 14}px` };
+  const indentStyle = { paddingLeft: `${level * 12 + 10}px` };
 
   return (
-    <div>
+    <div role="none">
       <div
         style={indentStyle}
         onContextMenu={handleContextMenu}
-        className={`
-          flex items-center h-8 px-2 cursor-pointer select-none text-[14px] group
-          transition-colors duration-100 ease-in-out
-          ${isActive 
-            ? 'bg-[#1a1a24] text-[#f0f0f5] border-l-2 border-indigo-500' 
-            : 'hover:bg-[#1a1a24]/60 text-[#9a9ab0] hover:text-[#f0f0f5] border-l-2 border-transparent'}
-          ${isRenaming ? 'bg-[#1a1a24]' : ''}
-        `}
+        className={`file-item ${isActive ? 'active' : ''} ${isRenaming ? 'renaming' : ''}`}
         onClick={isFolder ? handleFolderClick : handleFileClick}
+        role="treeitem"
+        aria-expanded={isFolder ? isExpanded : undefined}
+        aria-selected={isActive}
+        tabIndex={0}
       >
-        <span className={`mr-1 w-4 flex items-center justify-center text-[10px] transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''} ${!isFolder && 'invisible'}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-        </span>
-
-        <Icon className={`mr-2 text-[16px] flex-shrink-0 ${iconColor} ${!isActive && 'opacity-80'}`} />
+        {isFolder && (
+          <VscChevronRight 
+            className={`file-item-chevron ${isExpanded ? 'expanded' : ''}`}
+          />
+        )}
+        
+        <div className="file-item-icon">
+          <Icon className={iconColor} size={16} />
+        </div>
 
         {isRenaming ? (
           <RenameInput
@@ -101,23 +103,23 @@ export function TreeNode({
           />
         ) : (
           <>
-            <span className={`truncate flex-1 ${isActive ? 'font-medium' : 'font-normal'}`}>{node.name}</span>
+            <span className="file-item-name">{node.name}</span>
             {node.isDirty && (
-              <span className="ml-1 h-2 w-2 rounded-full bg-blue-500/60" />
+              <span className="file-item-dirty" />
             )}
           </>
         )}
       </div>
 
       {isFolder && isExpanded && (
-        <div>
+        <div role="group">
           {node.children.map((child) => (
             <TreeNode
               key={child.id}
               node={child}
               activeTabId={activeTabId}
               onFileClick={onFileClick}
-              onContextMenu={onContextMenu}
+              onContextMenu={handleContextMenu}
               renamingNodeId={renamingNodeId}
               onRenameComplete={onRenameComplete}
               onRenameCancel={onRenameCancel}
