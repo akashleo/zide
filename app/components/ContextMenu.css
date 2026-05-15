@@ -1,9 +1,9 @@
 .context-menu {
-  background-color: #1a1a24;
-  border: 1px solid #2a2a3a;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
-  padding: 6px 0;
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  padding: 4px;
   min-width: 170px;
   animation: context-menu-fade-in 75ms ease-out;
 }
@@ -22,29 +22,31 @@
 .context-menu-item {
   width: 100%;
   text-align: left;
-  padding: 8px 14px;
-  font-size: 14px;
+  padding: 6px 10px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 150ms, color 150ms;
+  transition: all var(--transition-fast);
   background: none;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  color: #b0b0c8;
+  color: var(--text-secondary);
 }
 
 .context-menu-item:hover {
-  background-color: rgba(99, 102, 241, 0.1); /* indigo-500/10 */
-  color: #f0f0f5;
+  background-color: var(--accent-subtle);
+  color: var(--text-primary);
 }
 
 .context-menu-item.danger {
-  color: #f87171; /* red-400 */
+  color: #ef4444;
 }
 
 .context-menu-item.danger:hover {
-  background-color: rgba(239, 68, 68, 0.1); /* red-500/10 */
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
 }
 
 .context-menu-item-icon {

@@ -1,11 +1,11 @@
 .tabs-bar {
   display: flex;
-  height: 48px;
+  height: 40px;
   align-items: center;
   overflow-x: auto;
-  background-color: #0f0f14;
+  background-color: var(--editor-bg);
   padding: 0 4px;
-  gap: 2px;
+  gap: 1px;
 }
 
 /* Hide scrollbar but allow scrolling */
@@ -20,31 +20,29 @@
 .tab-item {
   position: relative;
   display: flex;
-  height: 40px;
+  height: 32px;
   min-width: 0;
-  max-width: 200px;
+  max-width: 180px;
   flex-shrink: 0;
   align-items: center;
-  padding: 0 14px;
-  font-size: 14px;
-  transition: all 150ms ease-in-out;
-  border-top: 2px solid transparent;
-  border-radius: 6px 6px 0 0;
-  background-color: #0f0f14;
-  color: #6a6a80;
+  padding: 0 10px;
+  font-size: 13px;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--text-muted);
   border: none;
   cursor: pointer;
 }
 
 .tab-item:hover {
-  color: #b0b0c8;
-  background-color: rgba(26, 26, 36, 0.6);
+  color: var(--text-secondary);
+  background-color: var(--surface-sunken);
 }
 
 .tab-item.active {
-  background-color: #1a1a24;
-  color: #f0f0f5;
-  border-top-color: #6366f1; /* indigo-500 */
+  background-color: var(--surface-elevated);
+  color: var(--text-primary);
 }
 
 .tab-icon {
@@ -68,36 +66,32 @@
 .tab-dirty-dot {
   margin-left: auto;
   display: flex;
-  height: 8px;
-  width: 8px;
+  height: 6px;
+  width: 6px;
   border-radius: 9999px;
-  background-color: rgba(59, 130, 246, 0.8);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  background-color: var(--accent);
 }
 
 .tab-close-btn {
   margin-left: auto;
   opacity: 0;
   padding: 2px;
-  border-radius: 6px;
-  transition: all 150ms;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6a6a80;
+  color: var(--text-muted);
 }
 
-.tab-item:hover .tab-close-btn {
+.tab-item:hover .tab-close-btn,
+.tab-item.active .tab-close-btn {
   opacity: 1;
 }
 
-.tab-item.active .tab-close-btn {
-  color: #9a9ab0;
-}
-
 .tab-close-btn:hover {
-  background-color: #2a2a3a;
-  color: #f0f0f5;
+  background-color: var(--border);
+  color: var(--text-primary);
 }
 
 .tab-close-icon {
@@ -106,14 +100,14 @@
 }
 
 /* Icon Colors */
-.icon-blue { color: #60a5fa; }
+.icon-blue { color: #3b82f6; }
 .icon-orange-dark { color: #ea580c; }
 .icon-yellow-dark { color: #ca8a04; }
 .icon-orange { color: #f97316; }
 .icon-orange-light { color: #fb923c; }
 .icon-yellow { color: #eab308; }
-.icon-red { color: #f87171; }
-.icon-green { color: #16a34a; }
-.icon-blue-light { color: #93c5fd; }
+.icon-red { color: #ef4444; }
+.icon-green { color: #22c55e; }
+.icon-blue-light { color: #60a5fa; }
 .icon-gray { color: #9ca3af; }
-.icon-purple { color: #c084fc; }
+.icon-purple { color: #a855f7; }

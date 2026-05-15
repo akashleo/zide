@@ -26,6 +26,17 @@ export function FileTree() {
 
   // Tree and UI State
   const tree = useMemo(() => buildTree(files), [files]);
+
+  const rootNode = useMemo(() => {
+    if (tree.length === 1 && tree[0].type === 'folder') {
+      return tree[0];
+    }
+    return null;
+  }, [tree]);
+
+  const sidebarTitle = rootNode ? rootNode.name : 'Files';
+  const nodesToRender = rootNode ? rootNode.children : tree;
+
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
   const [renamingNodeId, setRenamingNodeId] = useState<string | null>(null);
 
@@ -92,25 +103,33 @@ export function FileTree() {
   }, [contextMenu, files, createNode, duplicateNode, deleteNode]);
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <span className="sidebar-title">Files</span>
-        <div className="sidebar-actions">
+    <aside className="filetree">
+      <div className="filetree-header">
+        <span className="filetree-title">{sidebarTitle}</span>
+        <div className="filetree-actions">
           <button 
-            className="sidebar-action-btn" 
+            className="filetree-action-btn" 
             title="New File"
-            onClick={() => createNode({ name: 'new_file.txt', type: 'file', parentId: null })}
+            onClick={() => createNode({ 
+              name: 'new_file.txt', 
+              type: 'file', 
+              parentId: rootNode ? rootNode.id : null 
+            })}
           >
             <VscNewFile size={16} />
           </button>
           <button 
-            className="sidebar-action-btn" 
+            className="filetree-action-btn" 
             title="New Folder"
-            onClick={() => createNode({ name: 'new_folder', type: 'folder', parentId: null })}
+            onClick={() => createNode({ 
+              name: 'new_folder', 
+              type: 'folder', 
+              parentId: rootNode ? rootNode.id : null 
+            })}
           >
             <VscNewFolder size={16} />
           </button>
-          <button className="sidebar-action-btn" title="Search">
+          <button className="filetree-action-btn" title="Search">
             <VscSearch size={16} />
           </button>
         </div>
@@ -128,13 +147,13 @@ export function FileTree() {
           }
         }}
       >
-        {tree.length === 0 ? (
+        {nodesToRender.length === 0 ? (
           <div className="file-tree-empty">
             <p className="file-tree-empty-text">No files in workspace</p>
             <p className="file-tree-empty-hint">Right-click to create a file</p>
           </div>
         ) : (
-          tree.map((node) => (
+          nodesToRender.map((node) => (
             <TreeNode
               key={node.id}
               node={node}
@@ -157,11 +176,19 @@ export function FileTree() {
           items={contextMenu.nodeId === 'root' ? [
             {
               label: 'New File',
-              onClick: () => createNode({ name: 'new_file.txt', type: 'file', parentId: null }),
+              onClick: () => createNode({ 
+                name: 'new_file.txt', 
+                type: 'file', 
+                parentId: rootNode ? rootNode.id : null 
+              }),
             },
             {
               label: 'New Folder',
-              onClick: () => createNode({ name: 'new_folder', type: 'folder', parentId: null }),
+              onClick: () => createNode({ 
+                name: 'new_folder', 
+                type: 'folder', 
+                parentId: rootNode ? rootNode.id : null 
+              }),
             }
           ] : menuItems}
           onClose={() => setContextMenu(null)}

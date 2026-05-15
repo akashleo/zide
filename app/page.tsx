@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { FaArrowRight, FaRobot, FaSpinner, FaXmark } from 'react-icons/fa6';
+import { FaArrowRight, FaRobot, FaSpinner, FaXmark, FaSun, FaMoon } from 'react-icons/fa6';
 import { PiSidebarSimpleBold } from 'react-icons/pi';
 import { FileTree, EditorPane, TabsBar, AiPanel } from './components';
 import { useFileStore } from './fileStore';
@@ -15,10 +15,31 @@ export default function Home() {
   const [isPicking, setIsPicking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
+  // Theme state
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  // Load theme on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('zide-theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      setTheme('light');
+    }
+  }, []);
+
+  // Apply theme change
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('zide-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
+
   // Sidebar state
-  const [sidebarWidth, setSidebarWidth] = useState(260);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
 
   // AI Panel state
   const [aiPanelWidth, setAiPanelWidth] = useState(380);
@@ -44,40 +65,7 @@ export default function Home() {
     return () => { cancelled = true; };
   }, [setFiles]);
 
-  // Handle sidebar resizing
-  const startResizing = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-  }, []);
-
-  const stopResizing = useCallback(() => {
-    setIsResizing(false);
-  }, []);
-
-  const resize = useCallback((e: MouseEvent) => {
-    if (isResizing) {
-      const newWidth = e.clientX;
-      if (newWidth > 150 && newWidth < 600) {
-        setSidebarWidth(newWidth);
-      }
-    }
-  }, [isResizing]);
-
-  useEffect(() => {
-    if (isResizing) {
-      window.addEventListener('mousemove', resize);
-      window.addEventListener('mouseup', stopResizing);
-    } else {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
-    }
-    return () => {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
-    };
-  }, [isResizing, resize, stopResizing]);
-
-  // Handle AI panel resizing
+  // AI Panel resizing logic remains
   const startAiResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setIsAiResizing(true);
@@ -244,7 +232,7 @@ export default function Home() {
     <div className="ide-container">
       {/* Sidebar Section */}
       <aside
-        style={{ width: isSidebarCollapsed ? 0 : sidebarWidth }}
+        style={{ width: isSidebarCollapsed ? 0 : 300 }}
         className="sidebar"
       >
         <div className="sidebar-filetree">
@@ -253,6 +241,13 @@ export default function Home() {
         <div className="sidebar-header">
           <h1 className="sidebar-title">ZIDE</h1>
           <div className="sidebar-actions">
+            <button
+              onClick={toggleTheme}
+              className="sidebar-theme-btn"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <FaSun size={14} /> : <FaMoon size={14} />}
+            </button>
             <button
               onClick={handleCloseWorkspace}
               className="sidebar-close-btn"
@@ -263,14 +258,6 @@ export default function Home() {
           </div>
         </div>
       </aside>
-
-      {/* Resize Handle */}
-      {!isSidebarCollapsed && (
-        <div
-          onMouseDown={startResizing}
-          className="resize-handle"
-        />
-      )}
 
       {/* Editor Section */}
       <main className="editor-main">

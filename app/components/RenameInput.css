@@ -1,10 +1,11 @@
 .rename-input {
-  background-color: rgba(49, 46, 129, 0.2); /* indigo-900/20 */
+  background-color: var(--accent-subtle);
   outline: none;
-  border: 1px solid #6366f1; /* indigo-500 */
-  padding: 4px 6px;
+  border: 1px solid var(--accent);
+  padding: 2px 6px;
   width: 100%;
-  font-size: 14px;
-  color: #f0f0f5;
-  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
 }
